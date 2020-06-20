@@ -8,6 +8,11 @@ public class Crime {
     private String mTitle;
     private Date mDate;
     private boolean mSolved;
+
+    public void setRequiresPolice(boolean requiresPolice) {
+        mRequiresPolice = requiresPolice;
+    }
+
     private boolean mRequiresPolice;
 
     public boolean isRequiresPolice() {

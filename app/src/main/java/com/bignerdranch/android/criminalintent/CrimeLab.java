@@ -18,7 +18,7 @@ public class CrimeLab {
     private CrimeLab(Context context) {
         mCrimes = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            Crime crime = new Crime((i+7)%2==0);
+            Crime crime = new Crime((i)%3==0);
             crime.setTitle("Crime #" + i);
             crime.setSolved(i % 2 == 0); // Для каждого второго объекта
             mCrimes.add(crime);

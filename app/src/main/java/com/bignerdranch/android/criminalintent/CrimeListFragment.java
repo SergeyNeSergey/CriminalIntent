@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,12 +22,20 @@ public class CrimeListFragment extends Fragment {
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mTitleTextView;
         private TextView mDateTextView;
+        private Button mCallToPolice;
         private Crime mCrime;
         public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_crime, parent, false));
             itemView.setOnClickListener(this);
             mTitleTextView = (TextView) itemView.findViewById(R.id.crime_title);
             mDateTextView = (TextView) itemView.findViewById(R.id.crime_date);
+        }
+        public CrimeHolder(LayoutInflater inflater, ViewGroup parent,int n) {
+            super(inflater.inflate(R.layout.list_item_crime_to_call_the_police, parent, false));
+            itemView.setOnClickListener(this);
+            mTitleTextView = (TextView) itemView.findViewById(R.id.cp_crime_title);
+            mDateTextView = (TextView) itemView.findViewById(R.id.cp_crime_date);
+            mCallToPolice = (Button) itemView.findViewById(R.id.call_police);
         }
         public void bind(Crime crime) {
             mCrime = crime;
@@ -41,6 +50,7 @@ public class CrimeListFragment extends Fragment {
 
         }
     }
+
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
         private List<Crime> mCrimes;
 
@@ -52,11 +62,13 @@ public class CrimeListFragment extends Fragment {
         @Override
         public CrimeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            if (viewType==1) return new CrimeHolder(layoutInflater, parent,1);
             return new CrimeHolder(layoutInflater, parent);
         }
 
         @Override
         public int getItemViewType(int position) {
+            if (mCrimes.get(position).isRequiresPolice()) return 1;
             return super.getItemViewType(position);
         }
 
