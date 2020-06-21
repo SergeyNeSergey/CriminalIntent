@@ -1,29 +1,30 @@
 package com.bignerdranch.android.criminalintent;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 
 public class Crime {
     private UUID mId;
     private String mTitle;
-    private Date mDate;
+    private String mDate;
     private boolean mSolved;
-
-    public void setRequiresPolice(boolean requiresPolice) {
-        mRequiresPolice = requiresPolice;
-    }
-
     private boolean mRequiresPolice;
+
+    public Crime(boolean mRequiresPolice) {
+        mId = UUID.randomUUID();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MMM d y", Locale.ENGLISH);
+        mDate = dateFormat.format(new Date());
+        this.mRequiresPolice = mRequiresPolice;
+    }
 
     public boolean isRequiresPolice() {
         return mRequiresPolice;
     }
 
-
-    public Crime(boolean mRequiresPolice) {
-        mId = UUID.randomUUID();
-        mDate = new Date();
-        this.mRequiresPolice=mRequiresPolice;
+    public void setRequiresPolice(boolean requiresPolice) {
+        mRequiresPolice = requiresPolice;
     }
 
     public UUID getId() {
@@ -38,12 +39,13 @@ public class Crime {
         mTitle = title;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return mDate;
     }
 
     public void setDate(Date date) {
-        mDate = date;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MMM d y", Locale.ENGLISH);
+        mDate = dateFormat.format(date);
     }
 
     public boolean isSolved() {
@@ -53,4 +55,5 @@ public class Crime {
     public void setSolved(boolean solved) {
         mSolved = solved;
     }
+
 }
