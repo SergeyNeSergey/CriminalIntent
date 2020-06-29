@@ -7,5 +7,6 @@
     <string name="call_police">Call to Police</string>
     <string name="to_first">First</string>
     <string name="to_last">Last</string>
+    <string name="date_picker_title">Date of crime:</string>
 
 </resources>
