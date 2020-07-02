@@ -9,6 +9,7 @@ public class Crime {
     private UUID mId;
     private String mTitle;
     private String mDate;
+    private Date mTime;
     private boolean mSolved;
     private boolean mRequiresPolice;
 
@@ -16,6 +17,8 @@ public class Crime {
         mId = UUID.randomUUID();
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MMM d y", Locale.ENGLISH);
         mDate = dateFormat.format(new Date());
+
+        mTime = new Date();
         this.mRequiresPolice = mRequiresPolice;
     }
 
@@ -55,5 +58,20 @@ public class Crime {
     public void setSolved(boolean solved) {
         mSolved = solved;
     }
+
+    public String getTimeHumanReadable() {
+        Date time =mTime;
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH: mm: ss zz", Locale.ENGLISH);
+        return timeFormat.format(time);
+    }
+    public Date getTime() {return mTime;}
+
+    public void setTime(Date time) {
+
+        mTime = time;
+    }
+
+
+
 
 }
