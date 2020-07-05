@@ -56,6 +56,12 @@ public class CrimeFragment extends Fragment {
         setHasOptionsMenu(true);
     }
     @Override
+    public void onPause() {
+        super.onPause();
+        CrimeLab.get(getActivity())
+                .updateCrime(mCrime);
+    }
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_crime, menu);
@@ -108,7 +114,7 @@ public class CrimeFragment extends Fragment {
                 DatePickerFragment dialog = null;
                 try {
                     dialog = DatePickerFragment
-                            .newInstance(dateFormat.parse(mCrime.getDate()));
+                            .newInstance(dateFormat.parse(mCrime.getDateHumanReadable()));
 
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -179,6 +185,6 @@ public class CrimeFragment extends Fragment {
     }
 
     private void updateDate() {
-        mDateButton.setText(mCrime.getDate());
+        mDateButton.setText(mCrime.getDateHumanReadable());
     }
 }

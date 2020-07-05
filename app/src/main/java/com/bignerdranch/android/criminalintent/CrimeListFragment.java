@@ -36,7 +36,7 @@ public class CrimeListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.new_crime:
-                Crime crime = new Crime(false);
+                Crime crime = new Crime();
                 CrimeLab.get(getActivity()).addCrime(crime);
                 Intent intent = CrimePagerActivity
                         .newIntent(getActivity(), crime.getId());
@@ -104,10 +104,14 @@ public class CrimeListFragment extends Fragment {
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
+        Crime crime= new Crime();
         if (mAdapter == null||crimeLab.getCrime(mPositionCrimeForSaveChanges)==null) {
             mAdapter = new CrimeAdapter(crimes);
+            mPositionCrimeForSaveChanges=crime.getId();
+
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
+            mAdapter.setCrimes(crimes);
             mAdapter.notifyItemChanged(crimes.indexOf(crimeLab.getCrime(mPositionCrimeForSaveChanges)));
         }
         updateSubtitle();
@@ -140,7 +144,7 @@ public class CrimeListFragment extends Fragment {
         public void bind(Crime crime) {
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
-            mDateTextView.setText(mCrime.getDate());
+            mDateTextView.setText(mCrime.getDateHumanReadable());
             mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE :
                     View.GONE);
         }
@@ -185,6 +189,9 @@ public class CrimeListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mCrimes.size();
+        }
+        public void setCrimes(List<Crime> crimes) {
+            mCrimes = crimes;
         }
     }
 }

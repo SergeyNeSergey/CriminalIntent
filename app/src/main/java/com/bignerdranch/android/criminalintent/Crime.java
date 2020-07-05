@@ -8,18 +8,19 @@ import java.util.UUID;
 public class Crime {
     private UUID mId;
     private String mTitle;
-    private String mDate;
+    private Date mDate;
     private Date mTime;
     private boolean mSolved;
     private boolean mRequiresPolice;
 
-    public Crime(boolean mRequiresPolice) {
-        mId = UUID.randomUUID();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MMM d y", Locale.ENGLISH);
-        mDate = dateFormat.format(new Date());
+    public Crime(UUID id) {
+        mId = id;
+        mDate = new Date();
+        mTime = mDate;
 
-        mTime = new Date();
-        this.mRequiresPolice = mRequiresPolice;
+    }
+    public Crime() {
+        this(UUID.randomUUID());
     }
 
     public boolean isRequiresPolice() {
@@ -42,13 +43,16 @@ public class Crime {
         mTitle = title;
     }
 
-    public String getDate() {
-        return mDate;
+    public String getDateHumanReadable() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MMM d y", Locale.ENGLISH);
+        String date = dateFormat.format(mDate);
+
+        return date;
     }
+    public Date getDate(){ return mDate;}
 
     public void setDate(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MMM d y", Locale.ENGLISH);
-        mDate = dateFormat.format(date);
+        mDate = date;
     }
 
     public boolean isSolved() {
