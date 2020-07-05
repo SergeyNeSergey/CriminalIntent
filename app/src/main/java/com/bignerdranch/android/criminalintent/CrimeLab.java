@@ -1,24 +1,33 @@
 package com.bignerdranch.android.criminalintent;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.bignerdranch.android.criminalintent.database.CrimeBaseHelper;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
 public class CrimeLab {
     private static CrimeLab sCrimeLab;
     private List<Crime> mCrimes;
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
 
     private CrimeLab(Context context) {
+        mContext = context.getApplicationContext();
+        mDatabase = new CrimeBaseHelper(mContext)
+                .getWritableDatabase();
         mCrimes = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            Crime crime = new Crime((i) % 3 == 0);
-            crime.setTitle("Crime #" + i);
-            crime.setSolved(i % 2 == 0); // Для каждого второго объекта
-            mCrimes.add(crime);
-        }
+
+    }
+    public void addCrime(Crime c) {
+        mCrimes.add(c);
+    }
+    public void deleteCrime(Crime c) {
+        if (mCrimes.size()>0){
+        mCrimes.remove(c);}
     }
 
     public static CrimeLab get(Context context) {
