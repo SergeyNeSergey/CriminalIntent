@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import java.util.UUID;
 
-public class CrimeListFragment extends Fragment {
+public class CrimeListFragment extends Fragment  {
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
@@ -116,6 +116,7 @@ public class CrimeListFragment extends Fragment {
         }
         updateSubtitle();
     }
+
 
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mTitleTextView;

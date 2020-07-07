@@ -1,25 +1,34 @@
 package com.bignerdranch.android.criminalintent;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
+
+
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
-
-public class Crime {
-    private UUID mId;
+@Entity
+public class Crime  {
+    @PrimaryKey @NonNull
+    public String mId;
     private String mTitle;
-    private Date mDate;
-    private Date mTime;
+    public Long mDate;
+    public Long mTime;
     private boolean mSolved;
     private boolean mRequiresPolice;
 
     public Crime(UUID id) {
-        mId = id;
-        mDate = new Date();
+        mId = id.toString();
+        mDate = new Date().getTime();
         mTime = mDate;
 
+
     }
-    public Crime() {
+    public Crime()  {
         this(UUID.randomUUID());
     }
 
@@ -32,7 +41,7 @@ public class Crime {
     }
 
     public UUID getId() {
-        return mId;
+        return UUID.fromString(mId);
     }
 
     public String getTitle() {
@@ -49,10 +58,11 @@ public class Crime {
 
         return date;
     }
-    public Date getDate(){ return mDate;}
+
+    public Date getDate(){ return Date.from(Instant.ofEpochMilli(mDate));}
 
     public void setDate(Date date) {
-        mDate = date;
+        mDate = date.getTime();
     }
 
     public boolean isSolved() {
@@ -64,18 +74,16 @@ public class Crime {
     }
 
     public String getTimeHumanReadable() {
-        Date time =mTime;
+        Date time =Date.from(Instant.ofEpochMilli(mTime));
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH: mm: ss zz", Locale.ENGLISH);
         return timeFormat.format(time);
     }
-    public Date getTime() {return mTime;}
+    @TypeConverter
+    public Date getTime() {return Date.from(Instant.ofEpochMilli(mTime));}
 
     public void setTime(Date time) {
 
-        mTime = time;
+        mTime = time.getTime();
     }
-
-
-
 
 }

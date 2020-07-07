@@ -1,38 +1,28 @@
 package com.bignerdranch.android.criminalintent.database;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.app.Application;
 
-import androidx.annotation.Nullable;
+import androidx.room.Room;
 
-import com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable;
 
-public class CrimeBaseHelper extends SQLiteOpenHelper {
-    private static final int VERSION = 1;
-    private static final String DATABASE_NAME = "crimeBase.db";
+public class CrimeBaseHelper extends Application {
+    public static CrimeBaseHelper instance;
 
-    public CrimeBaseHelper(@Nullable Context context) {
-        super(context, DATABASE_NAME, null, VERSION);
-    }
+    private CrimeLabData database;
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + CrimeTable.NAME+"(" +
-                " _id integer primary key autoincrement, " +
-                CrimeTable.Cols.UUID + ", " +
-                CrimeTable.Cols.TITLE + ", " +
-                CrimeTable.Cols.DATE + ", " +
-                CrimeTable.Cols.SOLVED + ", " +
-                CrimeTable.Cols.POLICE + ", " +
-                CrimeTable.Cols.TIME+
-                ")");
-
+    public void onCreate() {
+        super.onCreate();
+        instance = this;
+        database = Room.databaseBuilder(this, CrimeLabData.class, "crime_data_base")
+                .build();
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public static CrimeBaseHelper getInstance() {
+        return instance;
+    }
 
-
+    public CrimeLabData getDatabase() {
+        return database;
     }
 }
