@@ -3,34 +3,51 @@ package com.bignerdranch.android.criminalintent;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 
+import com.bignerdranch.android.criminalintent.database.CrimeLabData;
 import com.bignerdranch.android.criminalintent.database.CrimeLaboratory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class CrimeLab extends AppCompatActivity implements Runnable {
+public class CrimeLab implements Runnable {
     private static CrimeLab sCrimeLab;
-    public CrimeLaboratory CrimeLaboratory;
+    public CrimeLaboratory crimeLaboratory;
     private Context mContext;
-    private SQLiteDatabase mDatabase;
+    private CrimeLabData database;
+    private Thread newThread;
+
+    private UUID idOut;
+    private Crime crimeOut;
+    private Crime crimeIn;
+    private List<Crime> listOut;
 
     private CrimeLab(Context context) {
         mContext = context.getApplicationContext();
-
+        database = Room.databaseBuilder(mContext, CrimeLabData.class, "crime_data_base")
+                .build();
+        crimeLaboratory = database.mCrimeLaboratory();
 
 
     }
+
     public void addCrime(Crime c) {
-        run();
-        CrimeLaboratory.insert(c);
+        newThread = new Thread(this, "addCrime");
+        crimeIn=c;
+        newThread.start();
+
     }
+
     public void deleteCrime(Crime c) {
-        run();
-        CrimeLaboratory.delete(c);
+        newThread = new Thread(this, "deleteCrime");
+        crimeIn=c;
+        newThread.start();
+
 
     }
 
@@ -42,24 +59,47 @@ public class CrimeLab extends AppCompatActivity implements Runnable {
     }
 
     public List<Crime> getCrimes() {
-        run();
-        return CrimeLaboratory.getAll();
+        newThread = new Thread(this, "getCrimes");
+        newThread.start();
+        return listOut;
     }
 
     public Crime getCrime(UUID id) {
-        run();
-            return CrimeLaboratory.getById(id.toString());
+        newThread = new Thread(this, "getCrime");
+        idOut =id;
+        newThread.start();
+        return crimeOut;
     }
+
     public void updateCrime(Crime crime) {
-        run();
-        CrimeLaboratory.update(crime);
+        newThread = new Thread(this, "updateCrime");
+        crimeIn=crime;
+        newThread.start();
 
     }
-
 
 
     @Override
     public void run() {
+        try {
+            switch (newThread.getName()) {
+                case "addCrime":
+                    crimeLaboratory.insert(crimeIn);
+                    break;
+                case "deleteCrime":
+                    crimeLaboratory.delete(crimeIn);
+                    break;
+                case "getCrimes": if (crimeLaboratory.getAll().size()==0) { listOut=new ArrayList<>();}
+                    else {listOut=crimeLaboratory.getAll();}
+                    break;
+                case "getCrime":
+                    crimeOut =crimeLaboratory.getById(idOut.toString());
+                case "updateCrime":
+                    crimeLaboratory.update(crimeIn);
+            }
 
+        } catch (Exception e) {
+            Log.e("CrimeLab","Exception in work with database");
+        }
     }
 }
