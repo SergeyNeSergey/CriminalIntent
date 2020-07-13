@@ -195,4 +195,5 @@ public class CrimeListFragment extends Fragment  {
             mCrimes = crimes;
         }
     }
+
 }

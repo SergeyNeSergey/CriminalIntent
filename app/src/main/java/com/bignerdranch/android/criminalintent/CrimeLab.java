@@ -2,7 +2,6 @@ package com.bignerdranch.android.criminalintent;
 
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import androidx.room.Room;
@@ -27,6 +26,7 @@ public class CrimeLab implements Runnable {
     private Crime crimeIn;
     private List<Crime> listOut;
 
+
     private CrimeLab(Context context) {
         mContext = context.getApplicationContext();
         database = Room.databaseBuilder(mContext, CrimeLabData.class, "crime_data_base")
@@ -40,6 +40,7 @@ public class CrimeLab implements Runnable {
         newThread = new Thread(this, "addCrime");
         crimeIn=c;
         newThread.start();
+
 
     }
 
@@ -58,9 +59,13 @@ public class CrimeLab implements Runnable {
         return sCrimeLab;
     }
 
-    public List<Crime> getCrimes() {
+    public List<Crime> getCrimes()  {
         newThread = new Thread(this, "getCrimes");
         newThread.start();
+        try{
+        Thread.sleep(500);}
+        catch (InterruptedException  e)
+        { Log.e("CrimeLab","UI Thread was braked");}
         return listOut;
     }
 
@@ -68,6 +73,10 @@ public class CrimeLab implements Runnable {
         newThread = new Thread(this, "getCrime");
         idOut =id;
         newThread.start();
+        try{
+            Thread.sleep(500);}
+        catch (InterruptedException  e)
+        { Log.e("CrimeLab","UI Thread was braked");}
         return crimeOut;
     }
 
@@ -89,8 +98,8 @@ public class CrimeLab implements Runnable {
                 case "deleteCrime":
                     crimeLaboratory.delete(crimeIn);
                     break;
-                case "getCrimes": if (crimeLaboratory.getAll().size()==0) { listOut=new ArrayList<>();}
-                    else {listOut=crimeLaboratory.getAll();}
+                case "getCrimes": listOut=crimeLaboratory.getAll();
+
                     break;
                 case "getCrime":
                     crimeOut =crimeLaboratory.getById(idOut.toString());

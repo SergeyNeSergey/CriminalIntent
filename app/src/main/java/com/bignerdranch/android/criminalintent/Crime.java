@@ -16,6 +16,7 @@ public class Crime  {
     @PrimaryKey @NonNull
     public String mId;
     private String mTitle;
+    private String mSuspect;
     public Long mDate;
     public Long mTime;
     private boolean mSolved;
@@ -25,6 +26,7 @@ public class Crime  {
         mId = id.toString();
         mDate = new Date().getTime();
         mTime = mDate;
+        mTitle = "emty";
 
 
     }
@@ -57,6 +59,14 @@ public class Crime  {
         String date = dateFormat.format(mDate);
 
         return date;
+    }
+
+    public String getSuspect() {
+        return mSuspect;
+    }
+
+    public void setSuspect(String suspect) {
+        mSuspect = suspect;
     }
 
     public Date getDate(){ return Date.from(Instant.ofEpochMilli(mDate));}

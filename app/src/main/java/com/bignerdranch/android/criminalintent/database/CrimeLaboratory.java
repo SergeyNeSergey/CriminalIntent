@@ -13,10 +13,12 @@ import java.util.List;
 
 @Dao
 public interface CrimeLaboratory {
-    @Query("SELECT * FROM crime")
+    @Query("SELECT * FROM Crime ")
     List<Crime> getAll();
     @Query("SELECT * FROM crime WHERE mId = :id")
     Crime getById(String id);
+    @Query("SELECT COUNT(*) FROM Crime  ")
+    Long getCount();
     @Insert
     void insert(Crime crime);
 
