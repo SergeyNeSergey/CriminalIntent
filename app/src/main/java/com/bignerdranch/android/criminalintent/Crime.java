@@ -95,5 +95,8 @@ public class Crime  {
 
         mTime = time.getTime();
     }
+    public String getPhotoFilename() {
+        return "IMG_" + getId().toString() + ".jpg";
+    }
 
 }

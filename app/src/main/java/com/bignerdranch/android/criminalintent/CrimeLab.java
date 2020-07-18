@@ -2,6 +2,7 @@ package com.bignerdranch.android.criminalintent;
 
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 
 import androidx.room.Room;
@@ -10,7 +11,8 @@ import androidx.room.Room;
 import com.bignerdranch.android.criminalintent.database.CrimeLabData;
 import com.bignerdranch.android.criminalintent.database.CrimeLaboratory;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -111,4 +113,8 @@ public class CrimeLab implements Runnable {
             Log.e("CrimeLab","Exception in work with database");
         }
     }
+    public File getPhotoFile(Crime crime) throws IOException {
+        File filesDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        return new File(filesDir, crime.getPhotoFilename());}
+
 }
