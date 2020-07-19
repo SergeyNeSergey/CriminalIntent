@@ -16,7 +16,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import java.util.List;
 import java.util.UUID;
 
-public class CrimePagerActivity extends AppCompatActivity {
+public class CrimePagerActivity extends AppCompatActivity implements CrimeFragment.Callbacks {
     private ViewPager2 mViewPager;
     private List<Crime> mCrimes;
     private Button mToFirst;
@@ -107,5 +107,9 @@ public class CrimePagerActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onCrimeUpdated(Crime crime) {
+
+    }
 }
 

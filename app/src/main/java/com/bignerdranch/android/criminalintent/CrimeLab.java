@@ -42,6 +42,10 @@ public class CrimeLab implements Runnable {
         newThread = new Thread(this, "addCrime");
         crimeIn=c;
         newThread.start();
+        try{
+            Thread.sleep(500);}
+        catch (InterruptedException  e)
+        { Log.e("CrimeLab","UI Thread was braked");}
 
 
     }
@@ -50,6 +54,10 @@ public class CrimeLab implements Runnable {
         newThread = new Thread(this, "deleteCrime");
         crimeIn=c;
         newThread.start();
+        try{
+            Thread.sleep(500);}
+        catch (InterruptedException  e)
+        { Log.e("CrimeLab","UI Thread was braked");}
 
 
     }
@@ -86,6 +94,10 @@ public class CrimeLab implements Runnable {
         newThread = new Thread(this, "updateCrime");
         crimeIn=crime;
         newThread.start();
+        try{
+            Thread.sleep(500);}
+        catch (InterruptedException  e)
+        { Log.e("CrimeLab","UI Thread was braked");}
 
     }
 
