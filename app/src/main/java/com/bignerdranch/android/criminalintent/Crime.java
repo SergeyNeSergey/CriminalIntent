@@ -5,20 +5,24 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverter;
 
-
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
+
+// Класс относящийся к Модели. Заполняет базу данных своими полями такими как ID преступления
+// (является первичным ключом), описание преступления, подозреваемый, дата, время,
+// раскрыто преступление или нет, необходимость вызвать полицию.
 @Entity
-public class Crime  {
-    @PrimaryKey @NonNull
+public class Crime {
+    @PrimaryKey
+    @NonNull
     public String mId;
-    private String mTitle;
-    private String mSuspect;
     public Long mDate;
     public Long mTime;
+    private String mTitle;
+    private String mSuspect;
     private boolean mSolved;
     private boolean mRequiresPolice;
 
@@ -30,7 +34,8 @@ public class Crime  {
 
 
     }
-    public Crime()  {
+
+    public Crime() {
         this(UUID.randomUUID());
     }
 
@@ -69,7 +74,9 @@ public class Crime  {
         mSuspect = suspect;
     }
 
-    public Date getDate(){ return Date.from(Instant.ofEpochMilli(mDate));}
+    public Date getDate() {
+        return Date.from(Instant.ofEpochMilli(mDate));
+    }
 
     public void setDate(Date date) {
         mDate = date.getTime();
@@ -84,17 +91,21 @@ public class Crime  {
     }
 
     public String getTimeHumanReadable() {
-        Date time =Date.from(Instant.ofEpochMilli(mTime));
+        Date time = Date.from(Instant.ofEpochMilli(mTime));
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH: mm: ss zz", Locale.ENGLISH);
         return timeFormat.format(time);
     }
+
     @TypeConverter
-    public Date getTime() {return Date.from(Instant.ofEpochMilli(mTime));}
+    public Date getTime() {
+        return Date.from(Instant.ofEpochMilli(mTime));
+    }
 
     public void setTime(Date time) {
 
         mTime = time.getTime();
     }
+
     public String getPhotoFilename() {
         return "IMG_" + getId().toString() + ".jpg";
     }
