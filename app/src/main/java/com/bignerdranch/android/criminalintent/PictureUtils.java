@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-
+//Класс для загрузки фотографии на аватар объекта Crime в CrimeFragment
 public class PictureUtils {
+
     public static Bitmap getScaledBitmap(String path, int destWidth, int
             destHeight) {
 // Чтение размеров изображения на диске
@@ -26,7 +27,7 @@ public class PictureUtils {
 // Чтение данных и создание итогового изображения
         return BitmapFactory.decodeFile(path, options);
     }
-
+// Масштабирование с консервативной оценкой
     public static Bitmap getScaledBitmap(String path, Activity activity) {
         Point size = new Point();
         activity.getWindowManager().getDefaultDisplay()
