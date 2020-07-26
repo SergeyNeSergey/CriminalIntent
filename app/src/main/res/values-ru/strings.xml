@@ -25,4 +25,5 @@
     <string name="crime_report_suspect">Подозреваемый %s.</string>
     <string name="crime_report_subject">CriminalIntent отчет о преступлении.</string>
     <string name="send_report">" Отправить преступление через"</string>
+    <string name="toast_report">Вы должны выбрать подозреваемого!</string>
 </resources>

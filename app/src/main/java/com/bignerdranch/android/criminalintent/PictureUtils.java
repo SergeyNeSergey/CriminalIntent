@@ -19,8 +19,7 @@ public class PictureUtils {
         if (srcHeight > destHeight || srcWidth > destWidth) {
             float heightScale = srcHeight / destHeight;
             float widthScale = srcWidth / destWidth;
-            inSampleSize = Math.round(heightScale > widthScale ? heightScale :
-                    widthScale);
+            inSampleSize = Math.round(Math.max(heightScale, widthScale));
         }
         options = new BitmapFactory.Options();
         options.inSampleSize = inSampleSize;

@@ -10,22 +10,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TimePicker;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
 public class TimePickerFragment extends DialogFragment {
     public static final String EXTRA_TIME =
             "com.bignerdranch.android.criminalintent.time";
     private static final String ARG_TIME = "time";
     private TimePicker mTimePicker;
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        assert getArguments() != null;
         Date date = (Date) getArguments().getSerializable(ARG_TIME);
         Calendar calendar = Calendar.getInstance();
+        assert date != null;
         calendar.setTime(date);
         int time = calendar.get(Calendar.HOUR_OF_DAY);
         int min = calendar.get(Calendar.MINUTE);
@@ -34,7 +39,7 @@ public class TimePickerFragment extends DialogFragment {
         mTimePicker =  v.findViewById(R.id.dialog_time_picker);
         mTimePicker.setCurrentHour(time);
         mTimePicker.setCurrentMinute(min);
-        return new AlertDialog.Builder(getActivity())
+        return new AlertDialog.Builder(Objects.requireNonNull(getActivity()))
                 .setView(v)
                 .setTitle(R.string.time_picker_title)
                 .setPositiveButton(android.R.string.ok,
@@ -45,7 +50,7 @@ public class TimePickerFragment extends DialogFragment {
                                 int min = mTimePicker.getCurrentMinute();
                                 Date date = new GregorianCalendar(0, 0,0,hour,min).
                                         getTime();
-                                sendResult(Activity.RESULT_OK, date);
+                                sendResult(date);
                             }
                         })
                 .create();
@@ -57,14 +62,14 @@ public class TimePickerFragment extends DialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
-    private void sendResult(int resultCode, Date date) {
+    private void sendResult(Date date) {
         if (getTargetFragment() == null) {
             return;
         }
         Intent intent = new Intent();
         intent.putExtra(EXTRA_TIME, date);
         getTargetFragment()
-                .onActivityResult(getTargetRequestCode(), resultCode, intent);
+                .onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
     }
 
 

@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,11 +49,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
-//Класс-фрагмент заполняющий CrimePagerActivity при работе с мониторами с меньшей стороной < 600dp
+
+//Класс-фрагмент хостом которого яв-ся CrimePagerActivity при работе с мониторами с меньшей стороной < 600dp
 //реализует ViewPager2. При работе с мониторами с меньшей стороной более 600dp заполняет две трети
 //CrimeListActivity
 public class CrimeFragment extends Fragment {
-    //Ключ для получения crimeId из класса Bundle
+    //Ключ для получения crimeId из сохраненных значений класса Bundle
     private static final String ARG_CRIME_ID = "crime_id";
     // Ключ для добавления экземпляра DatePickerFragment в FragmentManager и вывода его на
     //экран
@@ -88,15 +90,25 @@ public class CrimeFragment extends Fragment {
     private ImageView mPhotoView;
     private Callbacks mCallbacks;
 
-//В момент прикрепления фрагмента к активности хосту
-// выполняю непроверяемое преобразование своей активности к CrimeListFragment.Callbacks .
-// Это означает, что активность-хост должна реализовать CrimeListFragment.Callbacks.
+    //Метод для создания CrimeFragment
+    public static CrimeFragment newInstance(UUID crimeId) {
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_CRIME_ID, crimeId);
+        CrimeFragment fragment = new CrimeFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    //В момент прикрепления фрагмента к активности хосту
+// выполняю непроверяемое преобразование своей активности к CrimeFragment.Callbacks .
+// Это означает, что активность-хост должна реализовать CrimeFragment.Callbacks.
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mCallbacks = (Callbacks) context;
     }
-//В момент создания фрагмента запрашиваю экземпляр Crime из CrimeLab. Пытаюсь получить фотографию
+
+    //В момент создания фрагмента запрашиваю экземпляр Crime из CrimeLab. Пытаюсь получить фотографию
 // из CrimeLab. Прикрепляю меню.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,6 +124,7 @@ public class CrimeFragment extends Fragment {
 
         setHasOptionsMenu(true);
     }
+
     // В методе создания отображения фрагмента инициализирую текстовые поля,кнопки,кнопки с изображениями,
     // чекбоксы, изображения фотографий и реализую логику их работы. А так же логику работы с
     //диалоговыми окнами
@@ -283,27 +296,31 @@ public class CrimeFragment extends Fragment {
 
         return v;
     }
-// Обновляю преступления в момент паузы.
+
+    // Обновляю преступления в момент паузы.
     @Override
     public void onPause() {
         super.onPause();
         CrimeLab.get(getActivity())
                 .updateCrime(mCrime);
     }
-//В момент открепления фрагмента обнуляю mCallbacks
+
+    //В момент открепления фрагмента обнуляю mCallbacks
     @Override
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
     }
-//Создаю меню
+
+    //Создаю меню
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_crime, menu);
 
     }
-// При нажатии на кнопку "удаления" удаляю объект Crime
+
+    // При нажатии на кнопку "удаления" удаляю объект Crime
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -316,8 +333,7 @@ public class CrimeFragment extends Fragment {
         }
     }
 
-
-//Проверяю разрешение на чтение контактов, если оно получено, то вызываю метод чтения контактов.
+    //Проверяю разрешение на чтение контактов, если оно получено, то вызываю метод чтения контактов.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -328,7 +344,8 @@ public class CrimeFragment extends Fragment {
                 }
         }
     }
-//Обрабатываю результаты интентов.
+
+    //Обрабатываю результаты интентов.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
@@ -384,7 +401,8 @@ public class CrimeFragment extends Fragment {
 
 
     }
-//Получаю имя подозреваемого выбранного ранее и с помощью этого имени получаю номер телефона из
+
+    //Получаю имя подозреваемого выбранного ранее и с помощью этого имени получаю номер телефона из
 //из записной книжки и отправляю неявный интент автоматически набирающий(без автоматического вызова)
 //Если подозреваемый не был выбран, то выбрасываю тост предлагающий выграть подозреваемого
     private void readContacts() {
@@ -398,6 +416,7 @@ public class CrimeFragment extends Fragment {
             try {
                 assert c != null;
                 if (c.getCount() == 0) {
+                    Toast.makeText(getActivity(), R.string.toast_report, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 c.moveToFirst();
@@ -410,36 +429,30 @@ public class CrimeFragment extends Fragment {
                 assert c != null;
                 c.close();
             }
-        } catch (NullPointerException e) {
-            Toast t = new Toast(getActivity());
-            Toast.makeText(getActivity(), "You must choice the suspect!", Toast.LENGTH_SHORT);
-            t.show();
+        } catch (Exception e) {
+            Log.e("CrimeFragment", "Eror to read contact");
+
         }
 
     }
 
-//Метод для создания CrimeFragment
-    public static CrimeFragment newInstance(UUID crimeId) {
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_CRIME_ID, crimeId);
-        CrimeFragment fragment = new CrimeFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-//Метод для обновления преступления
+    //Метод для обновления преступления
     private void updateCrime() {
         CrimeLab.get(getActivity()).updateCrime(mCrime);
         mCallbacks.onCrimeUpdated(mCrime);
     }
-//Метод для обновления времени
+
+    //Метод для обновления времени
     private void updateTime() {
         mTimeButton.setText(mCrime.getTimeHumanReadable());
     }
-//Метод для обновления даты
+
+    //Метод для обновления даты
     private void updateDate() {
         mDateButton.setText(mCrime.getDateHumanReadable());
     }
-//Метод для отправки объекта Crime в тектстовом виде через мессенджеры
+
+    //Метод для отправки объекта Crime в тектстовом виде через мессенджеры
     private String getCrimeReport() {
         String solvedString = null;
         if (mCrime.isSolved()) {
@@ -460,7 +473,8 @@ public class CrimeFragment extends Fragment {
                 mCrime.getTitle(), dateString, solvedString, suspect);
         return report;
     }
-//Метод для обновления фото
+
+    //Метод для обновления фото
     private void updatePhotoView() {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
             mPhotoView.setImageDrawable(null);

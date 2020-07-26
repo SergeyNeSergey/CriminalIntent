@@ -61,9 +61,8 @@ public class Crime {
 
     public String getDateHumanReadable() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MMM d y", Locale.ENGLISH);
-        String date = dateFormat.format(mDate);
 
-        return date;
+        return dateFormat.format(mDate);
     }
 
     public String getSuspect() {
